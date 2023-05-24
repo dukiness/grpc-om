@@ -1,0 +1,82 @@
+syntax = "proto3";
+package firm;
+
+service Firm {
+    rpc get_mesh (Ask) returns (Ack);
+    rpc get_claims (Ask) returns (Ack);
+    rpc authenticate (Auth) returns (Ack);
+    rpc search_users( Search ) returns (Ack);
+    rpc create_evp_file( HomeFile) returns (Ack);
+
+}
+
+message Search {
+    string word = 1;
+}
+message HomeFile {
+    string name = 1;
+}
+message Ask {
+    uint32 id = 1;
+}
+
+message Auth {
+    string user_id = 1;
+    string user_pwd = 2;
+}
+enum Link {
+    Boss = 0;
+    Home = 1; // is in, is defineby is a member of, is at
+    Head = 2; // is head of 
+    Tail = 3; // reports to
+}
+
+enum Kind {
+    Area = 0; //Division Department
+    Site = 1; //Region
+    Unit = 2; //Org unit
+    Trap = 3; //Job
+    Post = 4; //Spot
+    Body = 5; //Employee
+    Face = 6; //User
+    Crew = 7; //Work Group
+    Oops = 8;
+}
+
+message Data {
+    Link link = 1;
+    Kind ty2 = 2;
+    uint32 id2 = 3;
+    string name = 4;
+    string text = 5;
+}
+
+message Sub {
+    uint32 uid = 1;
+    uint32 pid = 2;
+    string cn = 3;
+    string dn = 4;
+}
+
+message Text{
+    string name = 1;
+    string text = 2;
+}
+message User {
+    uint32 id = 1;
+    repeated Data org = 2;
+    repeated Sub subs = 3;
+}
+message Claims {
+    uint32 uid = 1;
+    uint32 pid = 2; 
+    string cn = 3;
+    string dn = 4;
+}
+message Ack {
+    bool ok = 1; 
+    string message = 2;
+    User user = 3;
+    Claims claims = 4;   
+    map<uint32, Claims> users = 5; 
+}
